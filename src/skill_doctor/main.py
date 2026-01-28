@@ -225,12 +225,10 @@ def main() -> int:
         if fail_on_error:
             print("❌ Validation failed")
             return 1
-        else:
-            print("⚠️  Validation failed (but not failing workflow)")
-            return 0
-    else:
-        print("✅ All skills passed validation")
+        print("⚠️  Validation failed (but not failing workflow)")
         return 0
+    print("✅ All skills passed validation")
+    return 0
 
 
 if __name__ == "__main__":

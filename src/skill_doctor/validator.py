@@ -222,11 +222,11 @@ def validate_skill(skill_dir: Path) -> ValidationResult:
     try:
         content = skill_md.read_text(encoding="utf-8")
         metadata, _ = parse_frontmatter(content)
+    except (OSError, UnicodeDecodeError) as e:
+        result.add_error(f"Error reading SKILL.md: {e}")
+        return result
     except ValueError as e:
         result.add_error(str(e))
-        return result
-    except Exception as e:
-        result.add_error(f"Error reading SKILL.md: {e}")
         return result
 
     # Validate metadata fields

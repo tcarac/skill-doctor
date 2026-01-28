@@ -2,6 +2,7 @@
 
 import json
 import os
+from pathlib import Path
 
 from github import Github
 from github.PullRequest import PullRequest
@@ -9,7 +10,7 @@ from github.PullRequest import PullRequest
 from .models import ValidationResult
 
 
-def get_pr() -> PullRequest | None:
+def get_pr() -> PullRequest | None:  # pylint: disable=too-many-return-statements
     """Get the current pull request from GitHub context.
 
     Returns:
@@ -44,7 +45,7 @@ def get_pr() -> PullRequest | None:
         repo = g.get_repo(repo_name)
         return repo.get_pull(pr_number)
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError) as e:
         print(f"Warning: Failed to get PR context: {e}")
         return None
 
@@ -85,7 +86,7 @@ def create_pr_comment(results: list[ValidationResult]) -> None:
             pr.create_issue_comment(full_comment)
             print("Created new PR comment")
 
-    except Exception as e:
+    except OSError as e:
         print(f"Warning: Failed to post PR comment: {e}")
 
 
@@ -190,6 +191,3 @@ def create_annotations(results: list[ValidationResult]) -> None:
                     annotation += f" (Suggestion: {error.suggestion})"
 
                 print(annotation)
-
-
-from pathlib import Path  # noqa: E402

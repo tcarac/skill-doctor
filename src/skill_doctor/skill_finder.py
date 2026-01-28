@@ -80,7 +80,7 @@ def find_changed_skills(base_ref: str = "origin/main") -> list[Path]:
     except subprocess.CalledProcessError as e:
         print(f"Warning: Failed to detect changed files: {e}")
         return []
-    except Exception as e:
+    except (OSError, ValueError) as e:
         print(f"Warning: Error finding changed skills: {e}")
         return []
 
@@ -100,23 +100,20 @@ def find_skills(path: str = ".", mode: str = "single", base_ref: str = "origin/m
         # In PR context, find changed skills
         if "GITHUB_EVENT_NAME" in os.environ and os.environ["GITHUB_EVENT_NAME"] == "pull_request":
             return find_changed_skills(base_ref)
-        else:
-            print("Warning: 'changed' mode requires PR context, falling back to 'single' mode")
-            mode = "single"
+        print("Warning: 'changed' mode requires PR context, falling back to 'single' mode")
+        mode = "single"
 
     if mode == "single":
         # Validate a single skill directory
         skill_path = Path(path).resolve()
         if skill_path.is_dir():
             return [skill_path]
-        else:
-            print(f"Error: Path is not a directory: {skill_path}")
-            return []
+        print(f"Error: Path is not a directory: {skill_path}")
+        return []
 
-    elif mode == "multiple":
+    if mode == "multiple":
         # Find multiple skills using glob pattern
         return find_skills_by_pattern(path, Path("."))
 
-    else:
-        print(f"Error: Invalid mode '{mode}'. Must be 'single', 'multiple', or 'changed'")
-        return []
+    print(f"Error: Invalid mode '{mode}'. Must be 'single', 'multiple', or 'changed'")
+    return []

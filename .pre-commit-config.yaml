@@ -63,6 +63,20 @@ repos:
         args: ['--ignore-missing-imports', '--scripts-are-modules']
         exclude: ^tests/
 
+  # Python linting with Pylint
+  - repo: https://github.com/pycqa/pylint
+    rev: v3.3.4
+    hooks:
+      - id: pylint
+        args: ['--rcfile=pyproject.toml']
+        additional_dependencies:
+          - PyYAML
+          - strictyaml
+          - PyGithub
+          - requests
+          - typing-extensions
+        exclude: ^tests/
+
   # Security checks with bandit
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.0
