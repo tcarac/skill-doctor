@@ -33,9 +33,11 @@ env
 *.swo
 
 # Documentation
-*.md
-!README.md
+# Keep README.md for package metadata
 docs
+CONTRIBUTING.md
+CHANGELOG.md
+SECURITY.md
 
 # Tests
 tests
