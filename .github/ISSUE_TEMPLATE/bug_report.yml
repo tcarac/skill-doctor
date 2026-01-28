@@ -1,0 +1,117 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Use action with configuration...
+        2. Run on skill directory...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: skill-example
+    attributes:
+      label: Example SKILL.md (if applicable)
+      description: If the issue relates to a specific skill, please provide a minimal example
+      render: yaml
+      placeholder: |
+        ---
+        name: example-skill
+        description: Example description
+        ---
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: GitHub Actions Workflow
+      description: Your workflow configuration
+      render: yaml
+      placeholder: |
+        name: Validate Skills
+        on: [pull_request]
+        jobs:
+          validate:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v4
+              - uses: tcarac/skill-doctor@v1
+                with:
+                  path: 'skills/*'
+
+  - type: input
+    id: version
+    attributes:
+      label: Skill Doctor Version
+      description: Which version are you using? (e.g., v1.0.0, v1, main)
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runner
+    attributes:
+      label: GitHub Actions Runner
+      description: Which runner are you using?
+      options:
+        - ubuntu-latest
+        - ubuntu-22.04
+        - ubuntu-20.04
+        - macos-latest
+        - windows-latest
+        - Other (please specify in description)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Please include any relevant log output
+      render: shell
+      placeholder: Paste logs here...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: Add any other context here...

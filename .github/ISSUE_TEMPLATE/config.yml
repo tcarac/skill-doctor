@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Agent Skills Specification
+    url: https://agentskills.io/specification
+    about: View the official Agent Skills specification
+  - name: Discussion Forum
+    url: https://github.com/tcarac/skill-doctor/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: Security Issue
+    url: https://github.com/tcarac/skill-doctor/security/advisories/new
+    about: Report a security vulnerability privately
