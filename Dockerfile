@@ -1,5 +1,5 @@
 # Use Python slim image
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Set labels for GitHub Container Registry
 LABEL org.opencontainers.image.source="https://github.com/tcarac/skill-doctor"
