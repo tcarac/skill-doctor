@@ -304,17 +304,17 @@ uv run pytest tests/test_validator.py -v
 ### Code Quality
 
 ```bash
-# Format code
-uv run black src tests
+# Run all quality checks with pre-commit
+make lint
 
-# Sort imports
-uv run isort src tests
+# Or manually
+uv run pre-commit run --all-files
 
-# Lint
-uv run pylint src
+# Auto-format code
+make format
 
-# Type check
-uv run mypy src
+# Install pre-commit hooks to run automatically on commit
+uv run pre-commit install
 ```
 
 ## 📚 More Examples

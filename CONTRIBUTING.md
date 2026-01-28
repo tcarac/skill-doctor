@@ -45,22 +45,30 @@ uv run pytest -v
 
 ### Code Quality
 
+Pre-commit hooks automatically run all quality checks (formatting, linting, type checking):
+
 ```bash
-# Format code with Black
-uv run black src tests
+# Run all pre-commit hooks manually
+uv run pre-commit run --all-files
 
-# Sort imports with isort
-uv run isort src tests
+# Or use make command
+make lint
 
-# Lint with Pylint
-uv run pylint src
+# Auto-format code
+make format
 
-# Type check with mypy
-uv run mypy src
-
-# Run all quality checks
-uv run black src tests && uv run isort src tests && uv run pylint src && uv run mypy src
+# Install pre-commit hooks to run automatically on commit
+uv run pre-commit install
 ```
+
+Pre-commit runs:
+
+- Black (code formatting)
+- isort (import sorting)
+- Ruff (fast linting)
+- Pylint (code quality)
+- mypy (type checking)
+- And many more checks (see .pre-commit-config.yaml)
 
 ### Comprehensive Testing
 

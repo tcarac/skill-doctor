@@ -41,16 +41,12 @@ install:
 	uv sync --all-extras
 
 lint:
-	@echo "Running linters..."
-	uv run black --check src tests
-	uv run isort --check-only src tests
-	uv run pylint src
-	uv run mypy src
+	@echo "Running pre-commit checks..."
+	uv run pre-commit run --all-files
 
 format:
-	@echo "Formatting code..."
-	uv run black src tests
-	uv run isort src tests
+	@echo "Formatting code with pre-commit..."
+	uv run pre-commit run --all-files
 
 clean:
 	@echo "Cleaning build artifacts..."
