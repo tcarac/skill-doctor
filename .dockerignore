@@ -55,3 +55,8 @@ requirements-dev.txt
 
 # Examples
 examples
+
+# Explicitly include required files for Docker build
+!pyproject.toml
+!uv.lock
+!README.md
