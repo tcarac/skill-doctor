@@ -27,5 +27,5 @@ RUN uv sync --frozen --no-dev
 # Set Python path
 ENV PYTHONPATH="/app/src:${PYTHONPATH}"
 
-# Entry point
-ENTRYPOINT ["uv", "run", "--no-dev", "python", "-m", "skill_doctor.main"]
+# Entry point - use the virtual environment's Python directly
+ENTRYPOINT ["/app/.venv/bin/python", "-m", "skill_doctor.main"]
