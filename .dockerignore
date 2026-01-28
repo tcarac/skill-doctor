@@ -46,8 +46,10 @@ tests
 .pylintrc
 .flake8
 pytest.ini
-pyproject.toml
 requirements-dev.txt
+.pre-commit-config.yaml
+.markdownlint.yaml
+.secrets.baseline
 
 # Examples
 examples
