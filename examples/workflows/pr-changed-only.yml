@@ -1,0 +1,33 @@
+# Example: Validate only changed skills in PRs (optimized for large repositories)
+
+name: Validate Changed Skills
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  validate:
+    name: Validate Changed Skills
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for git diff
+      
+      - name: Run Skill Doctor (Changed Files Only)
+        uses: tcarac/skill-doctor@v1
+        with:
+          mode: 'changed'
+          fail-on-error: true
+          comment-on-pr: true
+          create-annotations: true
+          auto-fix-suggestions: true

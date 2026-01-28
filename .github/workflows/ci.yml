@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: uv sync --all-extras
+      
+      - name: Run tests
+        run: uv run pytest --cov --cov-report=xml --cov-report=term
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  lint:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      
+      - name: Set up Python
+        run: uv python install 3.11
+      
+      - name: Install dependencies
+        run: uv sync --all-extras
+      
+      - name: Check formatting with Black
+        run: uv run black --check src tests
+      
+      - name: Check import sorting with isort
+        run: uv run isort --check-only src tests
+      
+      - name: Lint with Pylint
+        run: uv run pylint src
+      
+      - name: Type check with mypy
+        run: uv run mypy src
+
+  test-action:
+    name: Test Action
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Test with valid skill
+        uses: ./
+        with:
+          path: tests/fixtures/valid-skill
+          mode: single
+          fail-on-error: true
+          comment-on-pr: false
+          create-annotations: false
+      
+      - name: Test with invalid skill (expect failure)
+        uses: ./
+        id: test-invalid
+        continue-on-error: true
+        with:
+          path: tests/fixtures/invalid-skill
+          mode: single
+          fail-on-error: true
+          comment-on-pr: false
+          create-annotations: false
+      
+      - name: Verify invalid skill failed
+        if: steps.test-invalid.outcome != 'failure'
+        run: |
+          echo "Expected test-invalid to fail, but it succeeded"
+          exit 1

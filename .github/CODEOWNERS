@@ -1,0 +1,25 @@
+# Code owners for Skill Doctor
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @tcarac
+
+# Python source code
+/src/ @tcarac
+
+# Tests
+/tests/ @tcarac
+
+# CI/CD workflows
+/.github/workflows/ @tcarac
+
+# Documentation
+/*.md @tcarac
+/docs/ @tcarac
+
+# Docker configuration
+/Dockerfile @tcarac
+
+# Dependencies
+/pyproject.toml @tcarac
+/uv.lock @tcarac

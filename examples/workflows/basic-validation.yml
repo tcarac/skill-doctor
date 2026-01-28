@@ -1,0 +1,33 @@
+# Example: Basic skill validation on pull requests
+
+name: Validate Skills
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'skills/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  validate:
+    name: Validate Agent Skills
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Run Skill Doctor
+        uses: tcarac/skill-doctor@v1
+        with:
+          path: 'skills/*'
+          mode: 'multiple'
+          fail-on-error: true
+          comment-on-pr: true
+          create-annotations: true
