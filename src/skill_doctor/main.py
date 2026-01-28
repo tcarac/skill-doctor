@@ -6,7 +6,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import List
 
 from . import __version__
 from .github_integration import create_annotations, create_pr_comment
@@ -46,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def print_results(results: List[ValidationResult], show_suggestions: bool = True) -> None:
+def print_results(results: list[ValidationResult], show_suggestions: bool = True) -> None:
     """Print validation results to console.
 
     Args:
@@ -112,7 +111,7 @@ def set_output(name: str, value: str) -> None:
         print(f"::set-output name={name}::{value}")
 
 
-def save_json_results(results: List[ValidationResult], output_path: str = "results.json") -> str:
+def save_json_results(results: list[ValidationResult], output_path: str = "results.json") -> str:
     """Save results as JSON.
 
     Args:
@@ -188,7 +187,7 @@ def main() -> int:
     print()
 
     # Validate each skill
-    results: List[ValidationResult] = []
+    results: list[ValidationResult] = []
     for skill_dir in skill_dirs:
         print(f"Validating: {skill_dir}")
         result = validate_skill(skill_dir)

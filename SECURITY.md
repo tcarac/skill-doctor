@@ -34,6 +34,7 @@ When using Skill Doctor in your workflows:
 ### GitHub Token Permissions
 
 The action requires minimal permissions:
+
 - `contents: read` - To read repository files
 - `pull-requests: write` - To post comments on PRs (optional)
 - `checks: write` - To create annotations (optional)
@@ -78,6 +79,7 @@ jobs:
 ### Git Operations
 
 The action uses git commands when in "changed" mode:
+
 - Only reads git diff output
 - Does not modify repository history
 - Runs in isolated GitHub Actions environment
@@ -85,6 +87,7 @@ The action uses git commands when in "changed" mode:
 ### File Access
 
 The action:
+
 - Only reads SKILL.md files in specified directories
 - Does not execute user code from skills
 - Does not write files (except optional JSON output)
@@ -92,6 +95,7 @@ The action:
 ### GitHub API
 
 When posting PR comments:
+
 - Uses provided `GITHUB_TOKEN`
 - Only creates/updates comments
 - Does not access sensitive repository data

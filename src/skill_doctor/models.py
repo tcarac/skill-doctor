@@ -1,7 +1,6 @@
 """Data models for Agent Skills."""
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -10,10 +9,10 @@ class SkillProperties:
 
     name: str
     description: str
-    license: Optional[str] = None
-    compatibility: Optional[str] = None
-    allowed_tools: Optional[str] = None
-    metadata: Optional[dict[str, str]] = None
+    license: str | None = None
+    compatibility: str | None = None
+    allowed_tools: str | None = None
+    metadata: dict[str, str] | None = None
 
 
 @dataclass
@@ -21,9 +20,9 @@ class ValidationError:
     """A validation error found in a skill."""
 
     message: str
-    line: Optional[int] = None
+    line: int | None = None
     file: str = "SKILL.md"
-    suggestion: Optional[str] = None
+    suggestion: str | None = None
 
     def __str__(self) -> str:
         """Format error message."""
@@ -41,9 +40,9 @@ class ValidationResult:
     """Result of validating a skill."""
 
     skill_path: str
-    skill_name: Optional[str] = None
+    skill_name: str | None = None
     is_valid: bool = True
-    errors: Optional[list[ValidationError]] = None
+    errors: list[ValidationError] | None = None
 
     def __post_init__(self) -> None:
         """Initialize errors list if None."""
@@ -53,9 +52,9 @@ class ValidationResult:
     def add_error(
         self,
         message: str,
-        line: Optional[int] = None,
+        line: int | None = None,
         file: str = "SKILL.md",
-        suggestion: Optional[str] = None,
+        suggestion: str | None = None,
     ) -> None:
         """Add a validation error."""
         if self.errors is None:

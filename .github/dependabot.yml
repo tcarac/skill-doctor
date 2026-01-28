@@ -11,7 +11,7 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
-  
+
   # Docker
   - package-ecosystem: "docker"
     directory: "/"
@@ -23,7 +23,7 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
-  
+
   # Python dependencies (handled by uv, but Dependabot can still monitor)
   - package-ecosystem: "pip"
     directory: "/"

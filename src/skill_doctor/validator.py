@@ -3,11 +3,10 @@
 import re
 import unicodedata
 from pathlib import Path
-from typing import Optional
 
 import strictyaml
 
-from .models import SkillProperties, ValidationResult
+from .models import ValidationResult
 
 # Constants from Agent Skills specification
 MAX_SKILL_NAME_LENGTH = 64
@@ -24,7 +23,7 @@ ALLOWED_FIELDS = {
 }
 
 
-def find_skill_md(skill_dir: Path) -> Optional[Path]:
+def find_skill_md(skill_dir: Path) -> Path | None:
     """Find the SKILL.md file in a skill directory.
 
     Prefers SKILL.md (uppercase) but accepts skill.md (lowercase).
@@ -80,7 +79,7 @@ def parse_frontmatter(content: str) -> tuple[dict, str]:
     return metadata, body
 
 
-def validate_name(name: str, skill_dir: Optional[Path], result: ValidationResult) -> None:
+def validate_name(name: str, skill_dir: Path | None, result: ValidationResult) -> None:
     """Validate skill name format and directory match."""
     if not name or not isinstance(name, str) or not name.strip():
         result.add_error(
@@ -123,7 +122,7 @@ def validate_name(name: str, skill_dir: Optional[Path], result: ValidationResult
 
     # Check for invalid characters
     if not all(c.isalnum() or c == "-" for c in name):
-        invalid_chars = set(c for c in name if not (c.isalnum() or c == "-"))
+        invalid_chars = {c for c in name if not (c.isalnum() or c == "-")}
         result.add_error(
             f"Skill name '{name}' contains invalid characters: {', '.join(sorted(invalid_chars))}",
             line=2,

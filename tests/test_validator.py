@@ -4,11 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from skill_doctor.validator import (
-    find_skill_md,
-    parse_frontmatter,
-    validate_skill,
-)
+from skill_doctor.validator import find_skill_md, parse_frontmatter, validate_skill
 
 
 @pytest.fixture

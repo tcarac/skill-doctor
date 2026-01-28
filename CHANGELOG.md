@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-28
 
 ### Added
+
 - Initial release of Skill Doctor
 - Core validation logic following Agent Skills specification v1.0
 - Support for validating single skills, multiple skills, and changed skills in PRs
@@ -33,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modern Python tooling with `uv` for dependency management
 
 ### Documentation
+
 - Complete README with usage examples
 - Contributing guidelines
 - Security policy

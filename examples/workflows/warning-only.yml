@@ -19,11 +19,11 @@ jobs:
   validate:
     name: Validate Skills
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Run Skill Doctor
         uses: tcarac/skill-doctor@v1
         with:
@@ -32,6 +32,6 @@ jobs:
           fail-on-error: false  # Don't fail workflow
           comment-on-pr: true
           create-annotations: true
-      
+
       - name: Continue with other steps
         run: echo "Workflow continues regardless of validation results"

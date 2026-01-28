@@ -12,23 +12,23 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Generate Release Notes
         id: notes
         run: |
           # Get previous tag
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
           CURRENT_TAG=${GITHUB_REF#refs/tags/}
-          
+
           echo "Current tag: $CURRENT_TAG"
           echo "Previous tag: $PREV_TAG"
-          
+
           # Generate changelog
           if [ -z "$PREV_TAG" ]; then
             # First release - use all commits
@@ -37,31 +37,31 @@ jobs:
             # Subsequent releases - commits since last tag
             CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
           fi
-          
+
           # Create release notes
           cat > release_notes.md <<EOF
           ## Changes
-          
+
           ${CHANGELOG}
-          
+
           ## Installation
-          
+
           Add this to your workflow:
-          
+
           \`\`\`yaml
           - uses: tcarac/skill-doctor@${CURRENT_TAG}
             with:
               path: 'skills/*'
               mode: 'multiple'
           \`\`\`
-          
+
           ## Documentation
-          
+
           - [README](https://github.com/tcarac/skill-doctor#readme)
           - [Agent Skills Specification](https://agentskills.io/specification)
           - [CHANGELOG](https://github.com/tcarac/skill-doctor/blob/main/CHANGELOG.md)
           EOF
-      
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -71,16 +71,16 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Update Major Version Tag
         run: |
           CURRENT_TAG=${GITHUB_REF#refs/tags/}
           MAJOR_VERSION=$(echo $CURRENT_TAG | cut -d. -f1)
-          
+
           echo "Updating $MAJOR_VERSION to point to $CURRENT_TAG"
-          
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git tag -fa $MAJOR_VERSION -m "Update $MAJOR_VERSION to $CURRENT_TAG"
           git push origin $MAJOR_VERSION --force

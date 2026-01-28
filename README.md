@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Validate Skills
         uses: tcarac/skill-doctor@v1
         with:
@@ -136,16 +136,19 @@ jobs:
 Skill Doctor validates all aspects of the [Agent Skills specification](https://agentskills.io/specification):
 
 ### Required Fields
+
 - ✅ `name` - Must be lowercase, 1-64 chars, no consecutive hyphens
 - ✅ `description` - Must be non-empty, max 1024 chars
 
 ### Optional Fields
+
 - ✅ `license` - License information
 - ✅ `compatibility` - Environment requirements (max 500 chars)
 - ✅ `metadata` - Custom key-value pairs
 - ✅ `allowed-tools` - Pre-approved tool list (experimental)
 
 ### File Structure
+
 - ✅ SKILL.md must exist (uppercase or lowercase)
 - ✅ Valid YAML frontmatter format
 - ✅ Directory name must match skill name
@@ -226,6 +229,7 @@ uv run mypy src
 ## 📚 More Examples
 
 Check out the [`examples/workflows/`](examples/workflows/) directory for more usage examples:
+
 - [Basic Validation](examples/workflows/basic-validation.yml)
 - [Changed Files Only](examples/workflows/pr-changed-only.yml)
 - [Warning Mode](examples/workflows/warning-only.yml)

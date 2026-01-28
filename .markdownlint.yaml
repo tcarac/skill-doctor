@@ -1,0 +1,29 @@
+# Markdown linting configuration
+default: true
+
+# Line length
+MD013:
+  line_length: 240
+  code_blocks: false
+  tables: false
+
+# Multiple headings with same content
+MD024:
+  siblings_only: true
+
+# Inline HTML
+MD033:
+  allowed_elements:
+    - br
+    - details
+    - summary
+    - img
+
+# Emphasis used instead of heading
+MD036: false
+
+# Bare URLs
+MD034: false
+
+# First line in file should be a heading
+MD041: false

@@ -25,9 +25,9 @@ Fixes #
 
 <!-- List the main changes made in this PR -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Testing
 
@@ -40,7 +40,7 @@ Fixes #
 
 ### Test Results
 
-```
+```shell
 # Paste test output here if applicable
 ```
 

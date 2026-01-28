@@ -2,7 +2,6 @@
 
 import json
 import os
-from typing import List, Optional
 
 from github import Github
 from github.PullRequest import PullRequest
@@ -10,7 +9,7 @@ from github.PullRequest import PullRequest
 from .models import ValidationResult
 
 
-def get_pr() -> Optional[PullRequest]:
+def get_pr() -> PullRequest | None:
     """Get the current pull request from GitHub context.
 
     Returns:
@@ -34,7 +33,7 @@ def get_pr() -> Optional[PullRequest]:
         if not event_path:
             return None
 
-        with open(event_path, "r", encoding="utf-8") as f:
+        with open(event_path, encoding="utf-8") as f:
             event_data = json.load(f)
 
         pr_number = event_data.get("pull_request", {}).get("number")
@@ -50,7 +49,7 @@ def get_pr() -> Optional[PullRequest]:
         return None
 
 
-def create_pr_comment(results: List[ValidationResult]) -> None:
+def create_pr_comment(results: list[ValidationResult]) -> None:
     """Post validation results as a PR comment.
 
     Args:
@@ -90,7 +89,7 @@ def create_pr_comment(results: List[ValidationResult]) -> None:
         print(f"Warning: Failed to post PR comment: {e}")
 
 
-def generate_comment_body(results: List[ValidationResult]) -> str:
+def generate_comment_body(results: list[ValidationResult]) -> str:
     """Generate markdown comment body from validation results.
 
     Args:
@@ -165,7 +164,7 @@ def generate_comment_body(results: List[ValidationResult]) -> str:
     return "\n".join(lines)
 
 
-def create_annotations(results: List[ValidationResult]) -> None:
+def create_annotations(results: list[ValidationResult]) -> None:
     """Create GitHub annotations for validation errors.
 
     Args:

@@ -11,37 +11,37 @@ inputs:
     description: 'Path to skill directory or glob pattern (e.g., skills/*)'
     required: false
     default: '.'
-  
+
   mode:
     description: 'Validation mode: single, multiple, or changed'
     required: false
     default: 'single'
-  
+
   fail-on-error:
     description: 'Whether to fail the workflow on validation errors'
     required: false
     default: 'true'
-  
+
   comment-on-pr:
     description: 'Post validation results as PR comment'
     required: false
     default: 'true'
-  
+
   create-annotations:
     description: 'Create GitHub annotations for errors'
     required: false
     default: 'true'
-  
+
   auto-fix-suggestions:
     description: 'Include auto-fix suggestions in output'
     required: false
     default: 'true'
-  
+
   output-json:
     description: 'Output results as JSON artifact'
     required: false
     default: 'false'
-  
+
   github-token:
     description: 'GitHub token for API access (default: github.token)'
     required: false
@@ -50,13 +50,13 @@ inputs:
 outputs:
   validation-status:
     description: 'Overall validation status: passed, failed, or warning'
-  
+
   skills-validated:
     description: 'Number of skills validated'
-  
+
   errors-found:
     description: 'Total number of errors found'
-  
+
   json-results:
     description: 'Path to JSON results file (if output-json is enabled)'
 

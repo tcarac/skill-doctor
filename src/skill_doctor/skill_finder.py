@@ -1,12 +1,11 @@
 """Find skills in a repository."""
 
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess is used safely with git commands
 from pathlib import Path
-from typing import List
 
 
-def find_skills_by_pattern(pattern: str, base_path: Path = Path(".")) -> List[Path]:
+def find_skills_by_pattern(pattern: str, base_path: Path = Path(".")) -> list[Path]:
     """Find skill directories matching a glob pattern.
 
     Args:
@@ -37,7 +36,7 @@ def find_skills_by_pattern(pattern: str, base_path: Path = Path(".")) -> List[Pa
     return sorted(results)
 
 
-def find_changed_skills(base_ref: str = "origin/main") -> List[Path]:
+def find_changed_skills(base_ref: str = "origin/main") -> list[Path]:
     """Find skills that have changed in the current PR.
 
     Args:
@@ -48,7 +47,7 @@ def find_changed_skills(base_ref: str = "origin/main") -> List[Path]:
     """
     try:
         # Get changed files
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603, B607 - git command is safe and controlled
             ["git", "diff", "--name-only", base_ref, "HEAD"],
             capture_output=True,
             text=True,
@@ -86,7 +85,7 @@ def find_changed_skills(base_ref: str = "origin/main") -> List[Path]:
         return []
 
 
-def find_skills(path: str = ".", mode: str = "single", base_ref: str = "origin/main") -> List[Path]:
+def find_skills(path: str = ".", mode: str = "single", base_ref: str = "origin/main") -> list[Path]:
     """Find skills based on the specified mode.
 
     Args:

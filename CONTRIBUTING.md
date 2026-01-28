@@ -5,17 +5,20 @@ Thank you for your interest in contributing to Skill Doctor! This document provi
 ## Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/tcarac/skill-doctor.git
    cd skill-doctor
    ```
 
 2. **Install dependencies with uv**
+
    ```bash
    uv sync --all-extras
    ```
 
 3. **Activate the virtual environment**
+
    ```bash
    source .venv/bin/activate  # On Unix/macOS
    # or
@@ -74,6 +77,7 @@ uv run python -m skill_doctor.main --path="skills/*" --mode=multiple
 ## Pull Request Process
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -84,17 +88,20 @@ uv run python -m skill_doctor.main --path="skills/*" --mode=multiple
    - Update documentation as needed
 
 3. **Ensure tests pass**
+
    ```bash
    uv run pytest
    ```
 
 4. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "Description of your changes"
    ```
 
 5. **Push to your fork**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -128,7 +135,7 @@ uv run python -m skill_doctor.main --path="skills/*" --mode=multiple
 
 ## Project Structure
 
-```
+```text
 skill-doctor/
 ├── src/skill_doctor/       # Main package
 │   ├── __init__.py         # Package initialization
