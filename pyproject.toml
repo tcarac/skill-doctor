@@ -85,6 +85,10 @@ warn_unused_ignores = true
 warn_no_return = true
 strict_equality = true
 
+[[tool.mypy.overrides]]
+module = "strictyaml"
+ignore_missing_imports = true
+
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 100
 disable = [

@@ -60,6 +60,11 @@ repos:
         additional_dependencies:
           - types-PyYAML
           - types-requests
+          - PyYAML
+          - strictyaml
+          - PyGithub
+          - requests
+          - typing-extensions
         args: ['--ignore-missing-imports', '--scripts-are-modules']
         exclude: ^tests/
 
