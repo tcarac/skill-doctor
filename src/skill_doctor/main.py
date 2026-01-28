@@ -29,7 +29,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--path", default=".", help="Path to skill or pattern")
     parser.add_argument(
-        "--mode", default="single", choices=["single", "multiple", "changed"], help="Validation mode"
+        "--mode",
+        default="single",
+        choices=["single", "multiple", "changed"],
+        help="Validation mode",
     )
     parser.add_argument("--fail-on-error", default="true", help="Fail on validation errors")
     parser.add_argument("--comment-on-pr", default="true", help="Post PR comment")

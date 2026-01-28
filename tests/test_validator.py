@@ -123,7 +123,9 @@ Body content
 """)
     result = validate_skill(skill_dir)
     assert not result.is_valid
-    assert any("Missing required field" in e.message and "name" in e.message for e in (result.errors or []))
+    assert any(
+        "Missing required field" in e.message and "name" in e.message for e in (result.errors or [])
+    )
 
 
 def test_validate_missing_description(tmp_path):
@@ -137,7 +139,10 @@ Body content
 """)
     result = validate_skill(skill_dir)
     assert not result.is_valid
-    assert any("Missing required field" in e.message and "description" in e.message for e in (result.errors or []))
+    assert any(
+        "Missing required field" in e.message and "description" in e.message
+        for e in (result.errors or [])
+    )
 
 
 def test_validate_name_too_long(tmp_path):
@@ -153,7 +158,9 @@ Body content
 """)
     result = validate_skill(skill_dir)
     assert not result.is_valid
-    assert any("exceeds" in e.message and "character limit" in e.message for e in (result.errors or []))
+    assert any(
+        "exceeds" in e.message and "character limit" in e.message for e in (result.errors or [])
+    )
 
 
 def test_validate_name_with_uppercase(tmp_path):

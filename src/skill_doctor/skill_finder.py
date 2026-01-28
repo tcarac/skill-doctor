@@ -86,9 +86,7 @@ def find_changed_skills(base_ref: str = "origin/main") -> List[Path]:
         return []
 
 
-def find_skills(
-    path: str = ".", mode: str = "single", base_ref: str = "origin/main"
-) -> List[Path]:
+def find_skills(path: str = ".", mode: str = "single", base_ref: str = "origin/main") -> List[Path]:
     """Find skills based on the specified mode.
 
     Args:
