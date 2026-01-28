@@ -129,3 +129,7 @@ dmypy.json
 # Test results
 test-results/
 *.junit.xml
+
+# Act (local GitHub Actions testing)
+.secrets
+act-*

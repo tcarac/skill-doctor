@@ -1,5 +1,6 @@
 """Find skills in a repository."""
 
+import glob as glob_module
 import os
 import subprocess  # nosec B404 - subprocess is used safely with git commands
 from pathlib import Path
@@ -9,31 +10,42 @@ def find_skills_by_pattern(pattern: str, base_path: Path = Path(".")) -> list[Pa
     """Find skill directories matching a glob pattern.
 
     Args:
-        pattern: Glob pattern to match (e.g., 'skills/*')
-        base_path: Base path to search from
+        pattern: Glob pattern to match (e.g., 'skills/*' or '/absolute/path/*')
+        base_path: Base path to search from (used for relative patterns)
 
     Returns:
         List of paths to skill directories
     """
-    base_path = Path(base_path).resolve()
     results = []
 
-    # Handle single directory
-    target_path = base_path / pattern
+    # Check if pattern contains glob characters
+    has_glob = "*" in pattern or "?" in pattern or "[" in pattern
+
+    if has_glob:
+        # Use glob.glob which handles both absolute and relative paths
+        matched_paths = glob_module.glob(pattern)
+        for path_str in matched_paths:
+            skill_dir = Path(path_str)
+            if skill_dir.is_dir():
+                # Check if it contains SKILL.md
+                if (skill_dir / "SKILL.md").exists() or (skill_dir / "skill.md").exists():
+                    results.append(skill_dir)
+        return sorted(results)
+
+    # Handle single directory (no glob pattern)
+    pattern_path = Path(pattern)
+    if pattern_path.is_absolute():
+        target_path = pattern_path
+    else:
+        base_path = Path(base_path).resolve()
+        target_path = base_path / pattern
+
     if target_path.is_dir():
         # Check if it contains SKILL.md
         if (target_path / "SKILL.md").exists() or (target_path / "skill.md").exists():
             results.append(target_path)
-        return results
 
-    # Handle glob pattern
-    for skill_dir in base_path.glob(pattern):
-        if skill_dir.is_dir():
-            # Check if it contains SKILL.md
-            if (skill_dir / "SKILL.md").exists() or (skill_dir / "skill.md").exists():
-                results.append(skill_dir)
-
-    return sorted(results)
+    return results
 
 
 def find_changed_skills(base_ref: str = "origin/main") -> list[Path]:

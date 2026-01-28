@@ -1,0 +1,17 @@
+# Act configuration for local GitHub Actions testing
+# https://github.com/nektos/act
+
+# Use catthehacker images (more compatible with GitHub Actions)
+-P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+# Set container architecture
+--container-architecture linux/amd64
+
+# Bind workspace to avoid copying files
+--bind
+
+# Use .secrets for local secrets if needed
+--secret-file .secrets
+
+# Verbose logging (uncomment if needed for debugging)
+# -v

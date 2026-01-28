@@ -12,6 +12,27 @@ permissions:
   contents: read
 
 jobs:
+  pre-commit:
+    name: Pre-commit Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
   test:
     name: Test Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -44,37 +65,6 @@ jobs:
           file: ./coverage.xml
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  lint:
-    name: Lint and Format Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
-
-      - name: Set up Python
-        run: uv python install 3.11
-
-      - name: Install dependencies
-        run: uv sync --all-extras
-
-      - name: Check formatting with Black
-        run: uv run black --check src tests
-
-      - name: Check import sorting with isort
-        run: uv run isort --check-only src tests
-
-      - name: Lint with Pylint
-        run: uv run pylint src
-
-      - name: Type check with mypy
-        run: uv run mypy src
 
   test-action:
     name: Test Action
@@ -109,3 +99,218 @@ jobs:
         run: |
           echo "Expected test-invalid to fail, but it succeeded"
           exit 1
+
+  test-action-comprehensive:
+    name: Test - ${{ matrix.scenario.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          # Valid cases
+          - name: "Valid Single Skill"
+            path: "tests/fixtures/valid-skill"
+            mode: "single"
+            should-fail: false
+
+          - name: "Multiple Valid Skills"
+            path: "tests/fixtures/multiple-skills/all-valid/*"
+            mode: "multiple"
+            should-fail: false
+
+          - name: "Lowercase skill.md"
+            path: "tests/fixtures/file-structure/skill-md-lowercase"
+            mode: "single"
+            should-fail: false
+
+          # Invalid cases - Edge cases
+          - name: "Name Too Long"
+            path: "tests/fixtures/edge-cases/name-too-long"
+            mode: "single"
+            should-fail: true
+
+          - name: "Consecutive Hyphens"
+            path: "tests/fixtures/edge-cases/name-with-consecutive-hyphens"
+            mode: "single"
+            should-fail: true
+
+          - name: "Uppercase Name"
+            path: "tests/fixtures/edge-cases/name-with-uppercase"
+            mode: "single"
+            should-fail: true
+
+          - name: "Description Too Long"
+            path: "tests/fixtures/edge-cases/description-too-long"
+            mode: "single"
+            should-fail: true
+
+          - name: "Empty Description"
+            path: "tests/fixtures/edge-cases/description-empty"
+            mode: "single"
+            should-fail: true
+
+          - name: "Missing Name"
+            path: "tests/fixtures/edge-cases/missing-name"
+            mode: "single"
+            should-fail: true
+
+          - name: "Missing Description"
+            path: "tests/fixtures/edge-cases/missing-description"
+            mode: "single"
+            should-fail: true
+
+          - name: "Compatibility Too Long"
+            path: "tests/fixtures/edge-cases/compatibility-too-long"
+            mode: "single"
+            should-fail: true
+
+          - name: "No Frontmatter"
+            path: "tests/fixtures/edge-cases/no-frontmatter"
+            mode: "single"
+            should-fail: true
+
+          - name: "Unclosed Frontmatter"
+            path: "tests/fixtures/edge-cases/unclosed-frontmatter"
+            mode: "single"
+            should-fail: true
+
+          # File structure issues
+          - name: "No SKILL.md"
+            path: "tests/fixtures/file-structure/no-skill-md"
+            mode: "single"
+            should-fail: true
+
+          - name: "Name Directory Mismatch"
+            path: "tests/fixtures/file-structure/name-directory-mismatch"
+            mode: "single"
+            should-fail: true
+
+          # Multiple skills scenarios
+          - name: "Multiple Mixed Valid/Invalid"
+            path: "tests/fixtures/multiple-skills/mixed-valid-invalid/*"
+            mode: "multiple"
+            should-fail: true
+
+          - name: "Multiple All Invalid"
+            path: "tests/fixtures/multiple-skills/all-invalid/*"
+            mode: "multiple"
+            should-fail: true
+
+          # Optional fields
+          - name: "With License Field"
+            path: "tests/fixtures/optional-fields/with-license"
+            mode: "single"
+            should-fail: false
+
+          - name: "With Compatibility Field"
+            path: "tests/fixtures/optional-fields/with-compatibility"
+            mode: "single"
+            should-fail: false
+
+          - name: "With Metadata Field"
+            path: "tests/fixtures/optional-fields/with-metadata"
+            mode: "single"
+            should-fail: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test - ${{ matrix.scenario.name }}
+        id: validate
+        uses: ./
+        continue-on-error: ${{ matrix.scenario.should-fail }}
+        with:
+          path: ${{ matrix.scenario.path }}
+          mode: ${{ matrix.scenario.mode }}
+          fail-on-error: true
+          comment-on-pr: false
+          create-annotations: false
+
+      - name: Check expected failure
+        if: matrix.scenario.should-fail && steps.validate.outcome != 'failure'
+        run: |
+          echo "❌ Expected test to fail, but it succeeded"
+          exit 1
+
+      - name: Check expected success
+        if: (!matrix.scenario.should-fail) && steps.validate.outcome == 'failure'
+        run: |
+          echo "❌ Expected test to succeed, but it failed"
+          exit 1
+
+  test-docker-build:
+    name: Test Docker Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t skill-doctor:test .
+
+      - name: Test Docker image help
+        run: docker run --rm skill-doctor:test --help
+
+      - name: Test Docker with valid skill
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/fixtures:/workspace" \
+            skill-doctor:test \
+            --path=/workspace/valid-skill \
+            --mode=single
+
+      - name: Test Docker with invalid skill (expect failure)
+        continue-on-error: true
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/fixtures:/workspace" \
+            skill-doctor:test \
+            --path=/workspace/invalid-skill \
+            --mode=single
+
+      - name: Test Docker with multiple skills
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/tests/fixtures:/workspace" \
+            skill-doctor:test \
+            --path="/workspace/multiple-skills/all-valid/*" \
+            --mode=multiple
+
+  test-outputs:
+    name: Test Action Outputs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run validation with outputs
+        id: validate
+        uses: ./
+        continue-on-error: true
+        with:
+          path: tests/fixtures/multiple-skills/mixed-valid-invalid/*
+          mode: multiple
+          fail-on-error: false
+          comment-on-pr: false
+          create-annotations: false
+
+      - name: Verify outputs
+        run: |
+          echo "Validation Status: ${{ steps.validate.outputs.validation-status }}"
+          echo "Skills Validated: ${{ steps.validate.outputs.skills-validated }}"
+          echo "Errors Found: ${{ steps.validate.outputs.errors-found }}"
+
+          if [ -z "${{ steps.validate.outputs.validation-status }}" ]; then
+            echo "❌ validation-status output is empty"
+            exit 1
+          fi
+
+          if [ -z "${{ steps.validate.outputs.skills-validated }}" ]; then
+            echo "❌ skills-validated output is empty"
+            exit 1
+          fi
+
+          echo "✅ All outputs verified"

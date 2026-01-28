@@ -131,6 +131,97 @@ jobs:
     path: ${{ steps.validate.outputs.json-results }}
 ```
 
+## 🧪 Testing
+
+### Prerequisites
+
+- Docker installed and running
+- Python 3.11+ with uv
+- (Optional) [Act](https://github.com/nektos/act) for local workflow testing
+
+### Quick Test
+
+Test the action quickly with the test scripts:
+
+```bash
+# Test with Python directly (fastest)
+./scripts/test-action-local.sh
+
+# Test Docker build and run
+./scripts/test-docker-local.sh
+
+# Or use make
+make test
+```
+
+### Running All Tests
+
+```bash
+# Run all test suites
+make test-all
+
+# Or individually:
+make test         # Python unit tests
+make test-docker  # Docker integration tests
+make test-act     # GitHub Actions locally (requires Act)
+```
+
+### Testing Your Changes
+
+Before submitting a PR, ensure all tests pass:
+
+1. **Run unit tests**: `make test`
+2. **Test Docker build**: `make test-docker`
+3. **Test the action locally** (optional): `make test-act`
+4. **Run linters**: `make lint`
+
+### Local Workflow Testing with Act
+
+[Act](https://github.com/nektos/act) lets you run GitHub Actions workflows locally without pushing:
+
+```bash
+# Install Act
+brew install act  # macOS
+# or follow: https://github.com/nektos/act#installation
+
+# Run the action test workflow
+./scripts/test-with-act.sh test-action
+
+# Run all CI jobs
+act -j test
+act -j lint
+act -j test-action
+```
+
+### Troubleshooting Tests
+
+#### Docker build fails
+
+```bash
+# Clean Docker build cache
+docker builder prune -f
+
+# Rebuild without cache
+docker build --no-cache -t skill-doctor:test .
+```
+
+#### Act fails with permission errors
+
+```bash
+# Run with sudo (Linux)
+sudo act -j test-action
+
+# Or add your user to docker group
+sudo usermod -aG docker $USER
+```
+
+#### Tests pass locally but fail in CI
+
+```bash
+# Run with same environment as CI using Act
+act -j test-action --container-architecture linux/amd64
+```
+
 ## 🎯 Validation Checks
 
 Skill Doctor validates all aspects of the [Agent Skills specification](https://agentskills.io/specification):
@@ -213,17 +304,17 @@ uv run pytest tests/test_validator.py -v
 ### Code Quality
 
 ```bash
-# Format code
-uv run black src tests
+# Run all quality checks with pre-commit
+make lint
 
-# Sort imports
-uv run isort src tests
+# Or manually
+uv run pre-commit run --all-files
 
-# Lint
-uv run pylint src
+# Auto-format code
+make format
 
-# Type check
-uv run mypy src
+# Install pre-commit hooks to run automatically on commit
+uv run pre-commit install
 ```
 
 ## 📚 More Examples
